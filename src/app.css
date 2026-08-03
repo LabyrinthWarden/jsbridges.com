@@ -1,0 +1,217 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/work-sans';
+@import '@fontsource/ibm-plex-mono';
+
+@theme {
+	/* Neon-tuned versions of the same three brand hues (300/245/355) —
+	   same identity as the Design System, brighter/more saturated so
+	   they glow on black instead of reading quietly on cream. */
+	--color-primary: oklch(72% 0.25 300); /* neon Maker's Violet */
+	--color-accent-blue: oklch(76% 0.16 245); /* neon Bridgewater Blue */
+	--color-accent-pink: oklch(80% 0.2 355); /* neon Earnest Pink */
+
+	/* Wet asphalt at night — near-black with a cool blue-violet undertone. */
+	--color-paper: oklch(12% 0.03 264);
+	--color-bg-deep: oklch(8% 0.02 264);
+
+	/* Soft cool white for body copy, easier on the eyes than pure white
+	   against near-black. */
+	--color-ink: oklch(93% 0.012 280);
+
+	--font-display: 'Fraunces Variable', Fraunces, serif;
+	--font-body: 'Work Sans Variable', 'Work Sans', sans-serif;
+	--font-mono: 'IBM Plex Mono', monospace;
+
+	--container-prose: 42rem;
+}
+
+html {
+	background: var(--color-paper);
+	color: var(--color-ink);
+}
+
+body {
+	font-family: var(--font-body);
+	font-optical-sizing: auto;
+	position: relative;
+}
+
+::selection {
+	background: var(--color-primary);
+	color: var(--color-bg-deep);
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-accent-blue);
+	outline-offset: 3px;
+}
+
+/* ---------- neon glow utilities (plain classes, not Tailwind-generated) ---------- */
+
+.neon-violet {
+	color: var(--color-primary);
+	text-shadow:
+		0 0 6px color-mix(in oklch, var(--color-primary) 75%, transparent),
+		0 0 18px color-mix(in oklch, var(--color-primary) 45%, transparent),
+		0 0 42px color-mix(in oklch, var(--color-primary) 25%, transparent);
+}
+
+.neon-blue {
+	color: var(--color-accent-blue);
+	text-shadow:
+		0 0 6px color-mix(in oklch, var(--color-accent-blue) 75%, transparent),
+		0 0 18px color-mix(in oklch, var(--color-accent-blue) 45%, transparent),
+		0 0 42px color-mix(in oklch, var(--color-accent-blue) 25%, transparent);
+}
+
+.neon-pink {
+	color: var(--color-accent-pink);
+	text-shadow:
+		0 0 6px color-mix(in oklch, var(--color-accent-pink) 75%, transparent),
+		0 0 18px color-mix(in oklch, var(--color-accent-pink) 45%, transparent),
+		0 0 42px color-mix(in oklch, var(--color-accent-pink) 25%, transparent);
+}
+
+/* Mirrored "reflection" under short single-line neon text, e.g. a page
+   title — needs a matching data-text attribute with the same content. */
+.reflect {
+	position: relative;
+	display: inline-block;
+}
+
+.reflect::after {
+	content: attr(data-text);
+	position: absolute;
+	left: 0;
+	top: 100%;
+	width: 100%;
+	transform: scaleY(-1);
+	background: linear-gradient(to bottom, currentColor, transparent 70%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	opacity: 0.35;
+	filter: blur(1.5px);
+	pointer-events: none;
+	user-select: none;
+}
+
+.marker-glow-blue {
+	box-shadow:
+		0 0 6px var(--color-accent-blue),
+		0 0 16px color-mix(in oklch, var(--color-accent-blue) 60%, transparent);
+}
+
+.marker-glow-pink {
+	box-shadow:
+		0 0 6px var(--color-accent-pink),
+		0 0 16px color-mix(in oklch, var(--color-accent-pink) 60%, transparent);
+}
+
+/* ---------- fixed backdrop: glow blobs, wet reflection band ---------- */
+
+.scene-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	overflow: hidden;
+	pointer-events: none;
+	background: radial-gradient(ellipse at 50% -10%, var(--color-paper) 0%, var(--color-bg-deep) 70%);
+}
+
+.glow {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(70px);
+	opacity: 0.28;
+	mix-blend-mode: screen;
+}
+
+.glow-violet {
+	top: -12%;
+	left: -12%;
+	width: 55vw;
+	height: 55vw;
+	background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);
+}
+
+.glow-blue {
+	bottom: -18%;
+	right: -12%;
+	width: 55vw;
+	height: 55vw;
+	background: radial-gradient(circle, var(--color-accent-blue) 0%, transparent 70%);
+}
+
+.glow-pink {
+	top: 28%;
+	right: 15%;
+	width: 38vw;
+	height: 38vw;
+	opacity: 0.2;
+	background: radial-gradient(circle, var(--color-accent-pink) 0%, transparent 70%);
+}
+
+.wet-reflection {
+	position: absolute;
+	left: -10%;
+	right: -10%;
+	bottom: 0;
+	height: 40%;
+	opacity: 0.55;
+	mix-blend-mode: screen;
+	filter: blur(4px);
+	background:
+		repeating-linear-gradient(
+			98deg,
+			color-mix(in oklch, var(--color-primary) 22%, transparent) 0 2px,
+			transparent 2px 46px
+		),
+		repeating-linear-gradient(
+			98deg,
+			color-mix(in oklch, var(--color-accent-blue) 18%, transparent) 0 2px,
+			transparent 2px 64px
+		),
+		repeating-linear-gradient(
+			98deg,
+			color-mix(in oklch, var(--color-accent-pink) 14%, transparent) 0 2px,
+			transparent 2px 80px
+		);
+	background-size:
+		220% 100%,
+		260% 100%,
+		300% 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.wet-reflection {
+		animation: shimmer 22s linear infinite;
+	}
+}
+
+@keyframes shimmer {
+	from {
+		background-position:
+			0 0,
+			0 0,
+			0 0;
+	}
+	to {
+		background-position:
+			-420px 0,
+			360px 0,
+			-300px 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
