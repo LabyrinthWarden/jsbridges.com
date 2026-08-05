@@ -1,4 +1,5 @@
 <script>
+	import '../../app.css';
 	import { page } from '$app/stores';
 	import RainCanvas from '$lib/RainCanvas.svelte';
 
@@ -19,7 +20,7 @@
 	<RainCanvas />
 </div>
 
-<div class="relative z-10 flex min-h-screen flex-col">
+<div class="site-shell relative z-10 flex min-h-screen flex-col">
 	<header class="flex flex-wrap items-baseline gap-x-10 gap-y-2 px-6 pt-8 pb-6 md:px-12">
 		<a href="/" class="neon-violet reflect font-mono text-lg tracking-wide" data-text="JSB">JSB</a>
 

@@ -26,23 +26,27 @@
 	--container-prose: 42rem;
 }
 
-html {
+/* Applied to the (site) layout's wrapper div — deliberately NOT to
+   html/body, which apply everywhere regardless of route grouping.
+   Routes outside (site) (e.g. bare Lab experiments at
+   /lab/<experiment>) get none of this by default: no forced dark
+   background, no forced body font, no neon focus ring. The tokens and
+   font files above are still globally available if an experiment wants
+   to opt in to var(--font-mono) etc. — nothing is forced on it either
+   way. */
+.site-shell {
 	background: var(--color-paper);
 	color: var(--color-ink);
-}
-
-body {
 	font-family: var(--font-body);
 	font-optical-sizing: auto;
-	position: relative;
 }
 
-::selection {
+.site-shell ::selection {
 	background: var(--color-primary);
 	color: var(--color-bg-deep);
 }
 
-:focus-visible {
+.site-shell :focus-visible {
 	outline: 2px solid var(--color-accent-blue);
 	outline-offset: 3px;
 }
