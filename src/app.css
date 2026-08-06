@@ -118,7 +118,7 @@
 		0 0 16px color-mix(in oklch, var(--color-accent-pink) 60%, transparent);
 }
 
-/* ---------- fixed backdrop: glow blobs, wet reflection band ---------- */
+/* ---------- fixed backdrop: wet reflection band ---------- */
 
 .scene-backdrop {
 	position: fixed;
@@ -129,88 +129,73 @@
 	background: radial-gradient(ellipse at 50% -10%, var(--color-paper) 0%, var(--color-bg-deep) 70%);
 }
 
-.glow {
-	position: absolute;
-	border-radius: 50%;
-	filter: blur(70px);
-	opacity: 0.28;
-	mix-blend-mode: screen;
-}
-
-.glow-violet {
-	top: -12%;
-	left: -12%;
-	width: 55vw;
-	height: 55vw;
-	background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);
-}
-
-.glow-blue {
-	bottom: -18%;
-	right: -12%;
-	width: 55vw;
-	height: 55vw;
-	background: radial-gradient(circle, var(--color-accent-blue) 0%, transparent 70%);
-}
-
-.glow-pink {
-	top: 28%;
-	right: 15%;
-	width: 38vw;
-	height: 38vw;
-	opacity: 0.2;
-	background: radial-gradient(circle, var(--color-accent-pink) 0%, transparent 70%);
-}
-
 .wet-reflection {
 	position: absolute;
 	left: -10%;
 	right: -10%;
 	bottom: 0;
-	height: 40%;
-	opacity: 0.55;
+	height: 42%;
+	overflow: hidden;
 	mix-blend-mode: screen;
-	filter: blur(4px);
-	background:
-		repeating-linear-gradient(
-			98deg,
-			color-mix(in oklch, var(--color-primary) 22%, transparent) 0 2px,
-			transparent 2px 46px
-		),
-		repeating-linear-gradient(
-			98deg,
-			color-mix(in oklch, var(--color-accent-blue) 18%, transparent) 0 2px,
-			transparent 2px 64px
-		),
-		repeating-linear-gradient(
-			98deg,
-			color-mix(in oklch, var(--color-accent-pink) 14%, transparent) 0 2px,
-			transparent 2px 80px
-		);
-	background-size:
-		220% 100%,
-		260% 100%,
-		300% 100%;
+	filter: blur(16px);
+	/* Fades in from the "horizon" and dissolves toward the very bottom,
+	   instead of reading as a hard-edged rectangle. */
+	-webkit-mask-image: linear-gradient(to bottom, transparent, black 25%, black 85%, transparent);
+	mask-image: linear-gradient(to bottom, transparent, black 25%, black 85%, transparent);
+}
+
+/* Each puddle is its own element so it can travel independently — small
+   and near the top ("horizon") of the band, growing and moving down as
+   it "approaches," like passing pools of reflected light while driving.
+   Position/size/timing come from CSS custom properties set per-instance
+   in the markup, so this class stays reusable. */
+.puddle {
+	position: absolute;
+	left: var(--x);
+	top: 0%;
+	width: var(--size);
+	aspect-ratio: 2 / 1;
+	border-radius: 50%;
+	background: radial-gradient(ellipse, var(--puddle-color) 0%, transparent 70%);
+	opacity: 0;
+	transform: translateX(-50%) scale(0.15);
+}
+
+.puddle-primary {
+	--puddle-color: color-mix(in oklch, var(--color-primary) 60%, transparent);
+}
+
+.puddle-blue {
+	--puddle-color: color-mix(in oklch, var(--color-accent-blue) 55%, transparent);
+}
+
+.puddle-pink {
+	--puddle-color: color-mix(in oklch, var(--color-accent-pink) 50%, transparent);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-	.wet-reflection {
-		animation: shimmer 22s linear infinite;
+	.puddle {
+		animation: puddle-travel var(--duration) linear infinite;
+		animation-delay: var(--delay);
 	}
 }
 
-@keyframes shimmer {
-	from {
-		background-position:
-			0 0,
-			0 0,
-			0 0;
+@keyframes puddle-travel {
+	0% {
+		top: 0%;
+		transform: translateX(-50%) scale(0.15);
+		opacity: 0;
 	}
-	to {
-		background-position:
-			-420px 0,
-			360px 0,
-			-300px 0;
+	15% {
+		opacity: 0.55;
+	}
+	75% {
+		opacity: 0.35;
+	}
+	100% {
+		top: 100%;
+		transform: translateX(-50%) scale(2.6);
+		opacity: 0;
 	}
 }
 
@@ -222,5 +207,11 @@
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
+	}
+
+	/* Not just frozen — removed entirely. RainCanvas.svelte handles its
+	   own removal the same way (skips drawing anything at all). */
+	.wet-reflection {
+		display: none;
 	}
 }

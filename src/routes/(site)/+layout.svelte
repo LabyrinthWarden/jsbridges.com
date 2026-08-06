@@ -10,13 +10,32 @@
 		{ href: '/work', label: 'The Work' },
 		{ href: '/lab', label: 'The Lab' }
 	];
+
+	// Individual puddle reflections, each traveling independently from a
+	// horizon point toward the viewer — like passing puddles while driving.
+	// Fixed (not randomized on every render) so the scene doesn't reshuffle
+	// itself on navigation. Vary x/size/duration/delay so they don't all
+	// arrive in lockstep.
+	const puddles = [
+		{ x: '4%', size: '20vw', color: 'primary', duration: '7s', delay: '0s' },
+		{ x: '20%', size: '14vw', color: 'blue', duration: '6s', delay: '2.2s' },
+		{ x: '37%', size: '24vw', color: 'pink', duration: '8s', delay: '4.5s' },
+		{ x: '52%', size: '16vw', color: 'primary', duration: '6.5s', delay: '1.2s' },
+		{ x: '68%', size: '22vw', color: 'blue', duration: '7.5s', delay: '5.5s' },
+		{ x: '84%', size: '18vw', color: 'pink', duration: '7s', delay: '3.2s' },
+		{ x: '96%', size: '15vw', color: 'primary', duration: '6s', delay: '0.6s' }
+	];
 </script>
 
 <div class="scene-backdrop" aria-hidden="true">
-	<div class="glow glow-violet"></div>
-	<div class="glow glow-blue"></div>
-	<div class="glow glow-pink"></div>
-	<div class="wet-reflection"></div>
+	<div class="wet-reflection">
+		{#each puddles as p}
+			<div
+				class="puddle puddle-{p.color}"
+				style="--x: {p.x}; --size: {p.size}; --duration: {p.duration}; --delay: {p.delay};"
+			></div>
+		{/each}
+	</div>
 	<RainCanvas />
 </div>
 

@@ -73,14 +73,16 @@
 		}
 
 		function start() {
+			// Reduced motion: nothing is drawn at all — no static frame,
+			// no resize/seed work. Matches .wet-reflection's display:none
+			// in app.css — both scene pieces are fully removed, not just
+			// frozen.
+			if (reduceMotion) return;
+
 			resize();
 			seed();
-			if (reduceMotion) {
-				drawFrame();
-			} else {
-				if (rafId) cancelAnimationFrame(rafId);
-				tick();
-			}
+			if (rafId) cancelAnimationFrame(rafId);
+			tick();
 		}
 
 		window.addEventListener('resize', start);
