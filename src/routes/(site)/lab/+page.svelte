@@ -21,11 +21,16 @@
 	</div>
 
 	<!-- placeholder fragment: deliberately unstyled, stands in for future experiments -->
-	<div class="mt-16 border border-dashed border-accent-pink/35 p-6 text-sm text-ink/40">
-		<a href="/lab/keytime">KeyTime</a>
+	<div class="mt-16 border border-dashed border-accent-pink/35 p-6 text-sm text-ink/70">
+		<a href="/lab/keytime">KeyTime - A hotkey-driven time tracking app that captures only the "key sessions".</a>
 	</div>
 
-	<p class="mt-16 text-ink/70">
+	<div class="mt-16 border border-dashed border-accent-pink/35 p-6 text-sm text-ink/70">
+		<a href="/lab/gens">Generators for use in TTRPGs</a>	
+	</div>
+
+
+	<p class="mt-16 text-ink/80">
 		If something sparks a thought, my inbox is open.
 	</p>
 </section>
