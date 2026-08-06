@@ -27,9 +27,9 @@
   let now = $state(new Date());
   let hydrated = $state(false);
 
-  let descInputEl;
+  let descInputEl = $state(null);
   let flashTimer;
-  let importInputEl;
+  let importInputEl = $state(null);
 
   // ---------------------------------------------------------------------
   // DATE / TIME HELPERS
@@ -381,7 +381,9 @@
                   {e.type === 'BREAK' ? '☕' : e.type === 'START' ? '▶' : e.type === 'END' ? '🏁' : '•'}
                   {e.description}
                 </span>
-                <span class="kt-dim">{e.durationMinutes} min</span>
+                <span class="kt-dim">
+                  {e.type === 'START' || e.type === 'END' ? formatClock(e.timestamp) : `${e.durationMinutes} min`}
+                </span>
               </div>
             {/each}
           {/if}
@@ -559,15 +561,19 @@
 
 <style>
   .kt-root {
-    --key-gold: oklch(62% 0.14 65);
-    --key-gold-soft: oklch(62% 0.14 65 / 0.14);
-    --key-gold-dim: oklch(62% 0.14 65 / 0.55);
-    --bg: oklch(16% 0.01 65);
-    --bg-raised: oklch(21% 0.012 65);
-    --bg-card: oklch(23% 0.012 65);
-    --border: oklch(30% 0.015 65);
-    --text: oklch(94% 0.01 90);
-    --text-dim: oklch(68% 0.01 90);
+    /* Muted brass accent — chosen to read like the color of an actual key.
+       Kept as the only warm note in the palette; every neutral below is
+       genuinely cool/gray so the accent doesn't get diluted into a
+       warm-on-warm (retro) feel. */
+    --key-gold: oklch(65% 0.08 75);
+    --key-gold-soft: oklch(65% 0.08 75 / 0.14);
+    --key-gold-dim: oklch(65% 0.08 75 / 0.55);
+    --bg: oklch(15% 0.006 250);
+    --bg-raised: oklch(24% 0.006 250);
+    --bg-card: oklch(20% 0.006 250);
+    --border: oklch(30% 0.008 250);
+    --text: oklch(95% 0.004 250);
+    --text-dim: oklch(62% 0.006 250);
 
     background: var(--bg);
     color: var(--text);
@@ -609,7 +615,7 @@
 
   .kt-btn-primary {
     background: var(--key-gold);
-    color: oklch(16% 0.01 65);
+    color: oklch(15% 0.01 75);
     font-weight: 600;
   }
   .kt-btn-primary:hover { filter: brightness(1.08); }
