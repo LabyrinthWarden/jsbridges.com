@@ -35,7 +35,12 @@
    to opt in to var(--font-mono) etc. — nothing is forced on it either
    way. */
 .site-shell {
-	background: var(--color-paper);
+	/* No background here on purpose — .scene-backdrop (fixed, z-index 0)
+	   already paints the full dark gradient behind this. Giving
+	   .site-shell its own opaque background would sit ON TOP of that
+	   backdrop in the normal stacking order and hide the rain/glow
+	   entirely, unlike a background on html/body, which always paints
+	   behind fixed-position elements regardless. */
 	color: var(--color-ink);
 	font-family: var(--font-body);
 	font-optical-sizing: auto;
