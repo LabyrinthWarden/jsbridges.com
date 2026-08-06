@@ -93,6 +93,7 @@
 
 <svelte:head>
   <title>interPulse Massage — Quincy, CA</title>
+  <link rel="icon" href="/interpulse-logo.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
@@ -104,17 +105,9 @@
   <header>
     <div class="wrap nav-row">
       <button class="logo-btn" on:click={() => goTo('home')}>
-        <svg viewBox="0 0 60 30" class="logo-mark">
-          <path
-            d="M0,15 L8,15 L11,6 L15,24 L19,12 L23,18 L27,15 L34,15 C40,15 40,6 46,6 C52,6 52,24 58,15 L60,15"
-            fill="none"
-            stroke="#E8536B"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <span class="logo-text">interPulse</span>
+        <span class="logo-chip small">
+          <img src="/interpulse-logo.webp" alt="interPulse Massage" class="logo-img" />
+        </span>
       </button>
 
       <nav class="nav-links">
@@ -154,7 +147,7 @@
               pathLength="1000"
               d={pulsePath}
               fill="none"
-              stroke="rgba(255,255,255,0.75)"
+              stroke="rgba(72,205,162,0.75)"
               stroke-width="2.5"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -294,7 +287,7 @@
                     pathLength="1000"
                     d={pulsePath}
                     fill="none"
-                    stroke="rgba(255,255,255,0.9)"
+                    stroke="rgba(72,205,162,0.9)"
                     stroke-width="3"
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -406,17 +399,9 @@
       <div class="footer-grid">
         <div>
           <div class="footer-logo">
-            <svg viewBox="0 0 60 30" class="logo-mark small">
-              <path
-                d="M0,15 L8,15 L11,6 L15,24 L19,12 L23,18 L27,15 L34,15 C40,15 40,6 46,6 C52,6 52,24 58,15 L60,15"
-                fill="none"
-                stroke="#E8536B"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <span>interPulse Massage</span>
+            <span class="logo-chip">
+              <img src="/interpulse-logo.webp" alt="interPulse Massage" class="logo-img" />
+            </span>
           </div>
           <p>Licensed massage therapy in Quincy, CA — in-studio, in-home, or on-site.</p>
         </div>
@@ -467,7 +452,8 @@
     --twilight-deep: #1b0a2e;
     --amethyst: #7c3aed;
     --amethyst-deep: #5b21b6;
-    --rose: #e8536b;
+    --teal: #48cda2;
+    --teal-deep: #34b58c;
     --mist: #f1eafb;
     --paper: #fbfafd;
     --ink: #221434;
@@ -501,18 +487,18 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: var(--rose);
-    color: #fff;
+    background: var(--teal);
+    color: var(--twilight-deep);
     font-family: 'Inter', sans-serif;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 15px;
     padding: 13px 26px;
     border-radius: 999px;
     border: none;
     cursor: pointer;
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, background 0.15s ease;
   }
-  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-primary:hover { transform: translateY(-2px); background: var(--teal-deep); }
   .btn-primary.small { padding: 10px 20px; font-size: 14px; }
 
   .btn-ghost {
@@ -543,9 +529,17 @@
     background: none; border: none; cursor: pointer;
     display: flex; align-items: center; gap: 10px;
   }
-  .logo-mark { width: 30px; height: 15px; }
-  .logo-mark.small { width: 26px; height: 13px; }
-  .logo-text { font-family: 'Fraunces', serif; font-size: 20px; color: #fff; }
+  .logo-chip {
+    display: flex; align-items: center; justify-content: center;
+    background: #fff;
+    border-radius: 10px;
+    padding: 6px 10px;
+    height: 144px;
+    box-sizing: border-box;
+  }
+  .logo-chip.small { height: 56px; padding: 5px 8px; }
+  .logo-img { height: 100%; width: auto; display: block; }
+  .logo-img.small { height: 100%; width: auto; }
 
   .nav-links { display: none; gap: 32px; }
   @media (min-width: 768px) { .nav-links { display: flex; } }
@@ -556,7 +550,7 @@
     border-bottom: 2px solid transparent;
     padding-bottom: 6px;
   }
-  .nav-links button.active { color: #fff; border-bottom-color: var(--rose); }
+  .nav-links button.active { color: #fff; border-bottom-color: var(--teal); }
 
   .nav-mobile { display: flex; gap: 18px; padding: 0 24px 14px; overflow-x: auto; }
   @media (min-width: 768px) { .nav-mobile { display: none; } }
@@ -621,7 +615,7 @@
   .price-pill { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; background: var(--mist); color: var(--twilight); border-radius: 999px; padding: 6px 12px; }
 
   .testimonial-card { background: rgba(255, 255, 255, 0.06); border-radius: 18px; padding: 26px; border: 1px solid rgba(255, 255, 255, 0.1); }
-  .testimonial-card .stars { color: var(--rose); margin-bottom: 12px; font-size: 15px; letter-spacing: 2px; }
+  .testimonial-card .stars { color: var(--teal); margin-bottom: 12px; font-size: 15px; letter-spacing: 2px; }
   .testimonial-card p { font-size: 14.5px; line-height: 1.7; color: rgba(255, 255, 255, 0.85); margin: 0 0 16px; }
   .testimonial-card .name { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: rgba(255, 255, 255, 0.5); }
 
@@ -635,7 +629,7 @@
   .service-row .blurb { margin-top: 14px; font-size: 15px; line-height: 1.7; color: var(--ink-soft); max-width: 620px; }
   .service-row .price-pills { margin-top: 18px; }
   .service-row .price-pill { font-size: 13px; padding: 7px 14px; }
-  .service-row .note { margin-top: 12px; font-size: 13px; color: var(--rose); font-style: italic; }
+  .service-row .note { margin-top: 12px; font-size: 13px; color: var(--amethyst); font-style: italic; }
 
   .callout-box { background: var(--mist); border-radius: 18px; padding: 30px; }
   .callout-box h3 { font-family: 'Fraunces', serif; font-size: 20px; color: var(--twilight); margin: 0 0 8px; }
@@ -647,7 +641,7 @@
   @media (min-width: 768px) { .about-grid { grid-template-columns: 1fr 1fr; } }
   .about-photo {
     border-radius: 24px; overflow: hidden;
-    background: linear-gradient(150deg, var(--amethyst), var(--rose));
+    background: linear-gradient(150deg, var(--amethyst), var(--teal));
     aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center; padding: 32px;
   }
   .about-photo .caption { margin-top: 24px; text-align: center; color: rgba(255, 255, 255, 0.85); font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
@@ -655,7 +649,7 @@
   .credentials-box { background: var(--mist); border-radius: 18px; padding: 26px; }
   .credentials-box .label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amethyst); margin: 0 0 14px; }
   .credentials-box li { display: flex; gap: 10px; font-size: 14.5px; line-height: 1.5; margin-bottom: 12px; }
-  .credentials-box li span { color: var(--rose); margin-top: 2px; }
+  .credentials-box li span { color: var(--teal-deep); margin-top: 2px; }
 
   .contact-grid { display: grid; grid-template-columns: 1fr; gap: 48px; }
   @media (min-width: 768px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
@@ -667,7 +661,7 @@
   .hours-table td:last-child { text-align: right; }
   .details-text { font-size: 15px; line-height: 1.9; margin: 0; }
   .details-text a { color: var(--twilight); font-weight: 600; }
-  .map-link { font-size: 13.5px; font-weight: 600; color: var(--rose); }
+  .map-link { font-size: 13.5px; font-weight: 600; color: var(--teal-deep); }
 
   .form-field {
     width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--mist);
@@ -681,7 +675,6 @@
   .footer-grid { display: grid; grid-template-columns: 1fr; gap: 40px; padding: 56px 0 0; }
   @media (min-width: 768px) { .footer-grid { grid-template-columns: repeat(3, 1fr); } }
   .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .footer-logo span { font-family: 'Fraunces', serif; font-size: 19px; }
   .footer-grid p { color: rgba(255, 255, 255, 0.65); font-size: 14px; line-height: 1.7; max-width: 280px; }
   .footer-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); margin: 0 0 14px; }
   .footer-grid table { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: rgba(255, 255, 255, 0.85); }
