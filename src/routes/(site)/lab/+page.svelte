@@ -22,7 +22,7 @@
 
 	<!-- placeholder fragment: deliberately unstyled, stands in for future experiments -->
 	<div class="mt-16 border border-dashed border-accent-pink/35 p-6 text-sm text-ink/40">
-		&lt;!-- experiments land here --&gt;
+		<a href="/lab/keytime">KeyTime</a>
 	</div>
 
 	<p class="mt-16 text-ink/70">
