@@ -12,7 +12,7 @@
 	<a
 		href="/lab"
 		style="font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;
-			letter-spacing: 0.05em; color: color-mix(in oklch, var(--color-ink) 55%, transparent);
+			letter-spacing: 0.05em; color: color-mix(in oklch, var(--color-ink) 55%);
 			text-decoration: none;"
 	>
 		← The Lab
