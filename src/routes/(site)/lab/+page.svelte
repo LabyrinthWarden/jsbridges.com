@@ -38,6 +38,7 @@
   <div
     class="mt-16 border border-dashed border-accent-pink/35 p-6 text-sm text-ink/70">
     <a href="/lab/jeopardy/dnd/round-1">D&D 5e Jeopardy (Round 1)</a>
+    <br />
     <a href="/lab/jeopardy/dnd/round-2">D&D 5e Jeopardy (Round 2)</a>
   </div>
 
