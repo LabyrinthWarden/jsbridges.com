@@ -1,0 +1,1 @@
+<div style="max-width:800px; background-color:#2a3698; text-align:center; box-shadow: #2a3698 0 0 5px 0; padding:5px 10px"><iframe src="https://jeopardylabs.com/play/dd-5e-part-2?embed=1" frameborder="0" width="100%" height="500"></iframe><a target="_blank" href="https://jeopardylabs.com" style="color:#8791de; font-size:12px;">Jeopardy Game Template from JeopardyLabs!</a></div>
