@@ -9,16 +9,17 @@
 </script>
 
 <div style="min-height: 100vh; padding: 1.5rem;">
-	<a
+	<!-- <a
 		href="/lab"
 		style="font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;
 			letter-spacing: 0.05em; color: color-mix(in oklch, var(--color-ink) 55%);
 			text-decoration: none;"
 	>
 		← The Lab
-	</a>
+	</a> -->
 
-	<div style="margin-top: 2rem;">
+	<!-- <div style="margin-top: 2rem;"> -->
+	<div>
 		{@render children()}
 	</div>
 </div>
