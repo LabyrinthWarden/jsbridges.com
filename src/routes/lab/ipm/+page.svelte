@@ -93,7 +93,7 @@
 
 <svelte:head>
   <title>interPulse Massage — Quincy, CA</title>
-  <link rel="icon" href="/interpulse-logo.webp" />
+  <link rel="icon" href="/images/lab/ipm/interpulse-logo.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
@@ -106,7 +106,7 @@
     <div class="wrap nav-row">
       <button class="logo-btn" on:click={() => goTo('home')}>
         <span class="logo-chip small">
-          <img src="/interpulse-logo.webp" alt="interPulse Massage" class="logo-img" />
+          <img src="/images/lab/ipm/interpulse-logo.webp" alt="interPulse Massage" class="logo-img" />
         </span>
       </button>
 
@@ -400,7 +400,7 @@
         <div>
           <div class="footer-logo">
             <span class="logo-chip">
-              <img src="/interpulse-logo.webp" alt="interPulse Massage" class="logo-img" />
+              <img src="/images/lab/ipm/interpulse-logo.webp" alt="interPulse Massage" class="logo-img" />
             </span>
           </div>
           <p>Licensed massage therapy in Quincy, CA — in-studio, in-home, or on-site.</p>
