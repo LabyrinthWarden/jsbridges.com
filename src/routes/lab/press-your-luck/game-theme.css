@@ -1,0 +1,124 @@
+/* Press Your Luck -- shared theme
+   Design tokens: stage black #0B0B14, panel purple #1A1030, marquee gold #FFD447,
+   hot magenta #FF2E9A, electric cyan #00E5FF, whammy red #FF3B3B, chrome #C9CDD6 */
+
+@import url('https://fonts.googleapis.com/css2?family=Monoton&family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap');
+
+body {
+	margin: 0;
+	background: #0b0b14;
+}
+
+.stage {
+	min-height: 100vh;
+	background: radial-gradient(ellipse at top, #1a1030 0%, #0b0b14 70%);
+	color: #c9cdd6;
+	font-family: 'Space Grotesk', sans-serif;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 2rem 1rem 4rem;
+	box-sizing: border-box;
+}
+
+.marquee-title {
+	font-family: 'Monoton', cursive;
+	font-size: clamp(1.8rem, 6vw, 3.2rem);
+	letter-spacing: 0.08em;
+	color: #ffd447;
+	text-shadow:
+		0 0 10px #ffd447,
+		0 0 24px #ff2e9a,
+		0 0 40px #ff2e9a55;
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+.panel {
+	background: #1a1030;
+	border: 2px solid #ff2e9a;
+	border-radius: 12px;
+	padding: 2rem;
+	max-width: 520px;
+	width: 100%;
+	box-shadow: 0 0 30px #ff2e9a33;
+}
+
+h2, h3 {
+	font-family: 'Space Grotesk', sans-serif;
+	color: #00e5ff;
+	margin-top: 0;
+}
+
+.mini-btn {
+	background: none;
+	border: 1px solid #c9cdd6;
+	color: #c9cdd6;
+	border-radius: 6px;
+	padding: 0.4rem 0.7rem;
+	cursor: pointer;
+}
+
+.start-btn {
+	width: 100%;
+	margin-top: 1.2rem;
+	background: linear-gradient(180deg, #ffd447, #e0a800);
+	border: none;
+	border-radius: 8px;
+	padding: 0.9rem;
+	font-weight: 700;
+	font-size: 1.1rem;
+	color: #0b0b14;
+	cursor: pointer;
+	box-shadow: 0 4px 0 #a87700;
+}
+.start-btn:active {
+	transform: translateY(2px);
+	box-shadow: 0 2px 0 #a87700;
+}
+
+.mode-hint {
+	font-size: 0.8rem;
+	color: #6b6b7a;
+	margin-top: 0.5rem;
+	text-align: center;
+}
+
+.round-label {
+	font-family: 'IBM Plex Mono', monospace;
+	color: #ffd447;
+	font-size: 0.9rem;
+	margin-bottom: 0.5rem;
+}
+
+.buzzers {
+	display: flex;
+	gap: 0.6rem;
+}
+.buzzer-btn {
+	flex: 1;
+	background: #0b0b14;
+	border: 3px solid var(--pcolor);
+	color: var(--pcolor);
+	border-radius: 10px;
+	padding: 1rem 0.5rem;
+	font-weight: 700;
+	cursor: pointer;
+	font-family: 'Space Grotesk', sans-serif;
+}
+.buzzer-btn:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
+}
+.nobody-btn {
+	--pcolor: #c9cdd6;
+	flex: 0.7;
+}
+
+.stat-row {
+	font-family: 'IBM Plex Mono', monospace;
+	font-size: 0.65rem;
+	color: var(--pcolor);
+	opacity: 0.75;
+	padding: 0 0.4rem 0.4rem;
+}

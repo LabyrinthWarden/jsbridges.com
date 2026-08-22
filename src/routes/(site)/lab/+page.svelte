@@ -42,6 +42,11 @@
     <a href="/lab/jeopardy/dnd/round-2">D&D 5e Jeopardy (Round 2)</a>
   </div>
 
+    <div
+    class="mt-16 border border-dashed border-accent-pink/35 p-6 text-sm text-ink/70">
+    <a href="/lab/press-your-luck">WIP Press Your Luck game</a>
+  </div>
+
   <p class="mt-16 text-ink/80">
     If something sparks a thought, my inbox is open.
   </p>
