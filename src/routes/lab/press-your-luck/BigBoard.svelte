@@ -1,5 +1,7 @@
 <script>
-	import { gridArea, totalSpins } from './game-data.js';
+	import { gridArea } from './game-data.js';
+	import ConsoleCard from './ConsoleCard.svelte';
+	import TurnControls from './TurnControls.svelte';
 
 	let {
 		boardValues,
@@ -37,43 +39,20 @@
 
 		<div class="center-panel">
 			<div class="round-label">Round {round}</div>
-			<div class="turn-label" style={`color:${currentPlayer?.color}`}>
-				{currentPlayer?.name}'s turn
-			</div>
-			<div class="bank-readout">${currentPlayer?.roundBank.toLocaleString()}</div>
-			<div class="spins-label">{totalSpins(currentPlayer ?? { earnedSpins: 0, receivedSpins: 0 })} spin(s) left</div>
-
-			{#if lastResult}
-				<div class={`result-line ${lastResult.kind}`}>{lastResult.text}</div>
-			{/if}
-
-			<div class="board-controls">
-				{#if !spinning && !showPassChooser}
-					{#if !lastResult}
-						<button class="stop-btn spin-btn" onclick={onBeginSpin}>START SPIN</button>
-					{:else if totalSpins(currentPlayer) > 0}
-						<button class="stop-btn spin-btn" onclick={onBeginSpin}>SPIN AGAIN</button>
-						{#if !(currentPlayer?.receivedSpins > 0)}
-							<button class="pass-btn" onclick={onInitiatePass}>PASS SPINS</button>
-						{/if}
-					{/if}
-				{:else if spinning}
-					<button class="stop-btn" onclick={onStopSpin}>STOP</button>
-				{/if}
-			</div>
-
-			{#if showPassChooser}
-				<div class="pass-chooser">
-					<div class="mode-hint">Tied for the target spot — pass {totalSpins(currentPlayer)} spin(s) to:</div>
-					<div class="buzzers">
-						{#each passCandidates as c}
-							<button class="buzzer-btn" style={`--pcolor:${c.p.color}`} onclick={() => onPassTo(c.i)}>
-								{c.p.name}
-							</button>
-						{/each}
-					</div>
-					<button class="mini-btn" onclick={onCancelPassChooser}>Cancel</button>
-				</div>
+			{#if currentPlayer}
+				<ConsoleCard player={currentPlayer} isActive={true} spotlight={true} />
+				<TurnControls
+					{currentPlayer}
+					{lastResult}
+					{spinning}
+					{showPassChooser}
+					{passCandidates}
+					{onBeginSpin}
+					{onStopSpin}
+					{onInitiatePass}
+					{onPassTo}
+					{onCancelPassChooser}
+				/>
 			{/if}
 		</div>
 	</div>
@@ -82,7 +61,7 @@
 <style>
 	.board-wrap {
 		width: 100%;
-		max-width: 720px;
+		max-width: 1000px;
 		transition: background 0.15s;
 	}
 	.board-wrap.flash {
@@ -96,8 +75,26 @@
 	.board-grid {
 		display: grid;
 		grid-template-columns: repeat(6, 1fr);
-		grid-template-rows: repeat(5, minmax(70px, 1fr));
+		grid-template-rows: repeat(5, minmax(56px, auto));
 		gap: 6px;
+	}
+
+	/* Lock the board to a fixed shape once there's room for it, so nothing
+	   about the center panel's content can ever resize the ring cells. On
+	   very small screens it stays flexible so the center content has room. */
+	@media (min-width: 600px) {
+		.board-wrap {
+			/* Whichever is smallest: the usual cap, the available width, or
+			   the width that keeps the board's height within the viewport
+			   (reserving space for the title and page padding). */
+			width: min(1000px, 100%, calc((100vh - 90px) * 6 / 5));
+			container-type: inline-size;
+		}
+		.board-grid {
+			grid-template-rows: repeat(5, 1fr);
+			aspect-ratio: 6 / 5;
+			gap: 8px;
+		}
 	}
 
 	.cell {
@@ -109,17 +106,27 @@
 		justify-content: center;
 		text-align: center;
 		font-family: 'IBM Plex Mono', monospace;
-		font-size: 0.68rem;
-		line-height: 1.15;
-		color: #c9cdd6;
-		padding: 2px 4px;
+		font-size: clamp(0.8rem, 1.7vw, 1.25rem);
+		font-weight: 600;
+		line-height: 1.2;
+		color: #e4e6f0;
+		padding: 4px 6px;
 		overflow: hidden;
+	}
+
+	@media (min-width: 600px) {
+		.cell {
+			/* Scaled against the board's own rendered width (via container
+			   query units) rather than the viewport, since the board's width
+			   may now be capped by available height, not just the viewport. */
+			font-size: clamp(0.75rem, 3.1cqw, 1.15rem);
+		}
 	}
 	.cell.lit {
 		border-color: #ffd447;
-		box-shadow: 0 0 10px #ffd447, 0 0 22px #ff2e9a88, inset 0 0 12px #ffd447aa;
+		box-shadow: 0 0 12px #ffd447, 0 0 26px #ff2e9a88, inset 0 0 14px #ffd447aa;
 		color: #ffd447;
-		font-weight: 700;
+		font-weight: 800;
 	}
 
 	.center-panel {
@@ -131,80 +138,24 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding: 0.8rem;
-		gap: 0.35rem;
-		text-align: center;
+		padding: 0.7rem 0.8rem;
+		gap: 0.3rem;
+		overflow-y: auto;
 	}
 
-	.turn-label {
+	.center-panel .round-label {
+		font-size: 1.35rem;
 		font-weight: 700;
-		font-size: 1.1rem;
-	}
-	.bank-readout {
-		font-family: 'IBM Plex Mono', monospace;
-		font-size: 1.6rem;
-		color: #ffd447;
-	}
-	.spins-label {
-		font-size: 0.8rem;
-		color: #c9cdd6;
-	}
-	.result-line {
-		font-size: 0.85rem;
-		font-weight: 600;
-		margin-top: 0.3rem;
-	}
-	.result-line.whammy {
-		color: #ff3b3b;
-	}
-	.result-line.cash, .result-line.prize {
-		color: #00e5ff;
-	}
-	.result-line.bigbucks {
-		color: #ffd447;
+		margin-bottom: 0.1rem;
 	}
 
-	.board-controls {
-		display: flex;
-		gap: 0.5rem;
-		margin-top: 0.5rem;
-	}
-
-	.stop-btn {
-		background: linear-gradient(180deg, #ff2e9a, #b8005f);
-		border: none;
-		border-radius: 50px;
-		padding: 0.7rem 1.4rem;
-		color: #fff;
-		font-weight: 700;
-		font-size: 1rem;
-		cursor: pointer;
-		box-shadow: 0 4px 0 #7a0040;
-	}
-	.stop-btn:active {
-		transform: translateY(2px);
-		box-shadow: 0 2px 0 #7a0040;
-	}
-	.spin-btn {
-		background: linear-gradient(180deg, #00e5ff, #0088a3);
-		box-shadow: 0 4px 0 #005a6b;
-	}
-
-	.pass-btn {
-		background: none;
-		border: 2px solid #c9cdd6;
-		border-radius: 50px;
-		padding: 0.6rem 1.2rem;
-		color: #c9cdd6;
-		cursor: pointer;
-	}
-
-	.pass-chooser {
-		margin-top: 0.8rem;
-		width: 100%;
-		text-align: center;
-	}
-	.pass-chooser .buzzers {
-		margin-bottom: 0.5rem;
+	@media (max-width: 480px) {
+		.board-grid {
+			gap: 5px;
+		}
+		.cell {
+			font-size: clamp(0.6rem, 3.2vw, 0.85rem);
+			padding: 2px 3px;
+		}
 	}
 </style>

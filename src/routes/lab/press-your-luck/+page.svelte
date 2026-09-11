@@ -12,7 +12,10 @@
 		ELIMINATION_WHAMMIES,
 		shuffle,
 		shuffledBoard,
-		totalSpins
+		totalSpins,
+		randomInt,
+		triviaQuestionCountForPlayers,
+		TEST_NAME_POOL
 	} from './game-data.js';
 
 	import SetupPanel from './SetupPanel.svelte';
@@ -25,7 +28,26 @@
 	let phase = $state('setup'); // setup | trivia | board | gameEnd
 	let playerNames = $state(['', '']);
 	let players = $state([]); // {name, color, score, roundBank, earnedSpins, receivedSpins, whammyCount, eliminated}
+
+	// Alternating split so consoles sit left/right like seats around a table --
+	// only used once the wide side-by-side board layout is active.
+	let leftIndices = $derived(players.map((_, i) => i).filter((i) => i % 2 === 0));
+	let rightIndices = $derived(players.map((_, i) => i).filter((i) => i % 2 === 1));
+	let allIndices = $derived(players.map((_, i) => i));
+
+	// Tracks whether the wide side-by-side board layout is active, so the
+	// stacked layout can render one unified console grid instead of two
+	// separate halves (which caused misordering and gaps).
+	let isWideBoard = $state(false);
+	$effect(() => {
+		const mq = window.matchMedia('(min-width: 1100px)');
+		const update = () => (isWideBoard = mq.matches);
+		update();
+		mq.addEventListener('change', update);
+		return () => mq.removeEventListener('change', update);
+	});
 	let round = $state(1);
+	let testMode = $state(false);
 
 	let triviaQueue = $state([]);
 	let triviaIndex = $state(0);
@@ -108,7 +130,7 @@
 
 	// ---------- Setup ----------
 	function addPlayerSlot() {
-		if (playerNames.length < 3) playerNames = [...playerNames, ''];
+		if (playerNames.length < 6) playerNames = [...playerNames, ''];
 	}
 	function removePlayerSlot(i) {
 		if (playerNames.length > 2) playerNames = playerNames.filter((_, idx) => idx !== i);
@@ -117,6 +139,7 @@
 	function startGame() {
 		const names = playerNames.map((n) => n.trim()).filter(Boolean);
 		if (names.length < 2) return;
+		testMode = false;
 		players = names.map((name, i) => ({
 			name,
 			color: PLAYER_COLORS[i],
@@ -131,6 +154,32 @@
 		startTriviaRound();
 	}
 
+	// ---------- Test mode ----------
+	// Skips trivia entirely -- random names, random starting spins -- so the
+	// board mechanics can be playtested without running through questions first.
+	function startTestGame(count) {
+		testMode = true;
+		const names = shuffle(TEST_NAME_POOL).slice(0, count);
+		players = names.map((name, i) => ({
+			name,
+			color: PLAYER_COLORS[i],
+			score: 0,
+			roundBank: 0,
+			earnedSpins: randomInt(2, 8),
+			receivedSpins: 0,
+			whammyCount: 0,
+			eliminated: false
+		}));
+		round = 1;
+		startBoardRound();
+	}
+
+	function assignTestSpins() {
+		players.forEach((p) => {
+			if (!p.eliminated) p.earnedSpins = randomInt(2, 8);
+		});
+	}
+
 	// ---------- Trivia ----------
 	// Host reads each question aloud. First buzz-in gets a direct shot for 3 spins;
 	// their answer (right or wrong) becomes one of the multiple-choice options for
@@ -138,7 +187,7 @@
 	// before time's up, all three players get the multiple-choice shot instead.
 	function startTriviaRound() {
 		phase = 'trivia';
-		triviaQueue = pickTriviaQuestions(4);
+		triviaQueue = pickTriviaQuestions(triviaQuestionCountForPlayers(players.length));
 		triviaIndex = 0;
 		resetQuestionState();
 	}
@@ -315,6 +364,9 @@
 		consumeSpin(player);
 
 		if (square.type === 'whammy') {
+			// A whammy wipes everything the player has accumulated in the game so far,
+			// not just this turn's bank -- matching the real show's rule.
+			player.score = 0;
 			player.roundBank = 0;
 			player.whammyCount += 1;
 			// A whammy converts any leftover passed spins into ordinary earned spins.
@@ -463,7 +515,12 @@
 	function endBoardRound() {
 		if (round < TOTAL_ROUNDS) {
 			round += 1;
-			startTriviaRound();
+			if (testMode) {
+				assignTestSpins();
+				startBoardRound();
+			} else {
+				startTriviaRound();
+			}
 		} else {
 			finalizeGame(false);
 		}
@@ -476,6 +533,7 @@
 		round = 1;
 		lastResult = null;
 		noChampion = false;
+		testMode = false;
 	}
 </script>
 
@@ -491,6 +549,7 @@
 			onRemovePlayer={removePlayerSlot}
 			onResetQuestions={resetUsedQuestions}
 			onStart={startGame}
+			onStartTest={startTestGame}
 		/>
 	{/if}
 
@@ -513,27 +572,82 @@
 	{/if}
 
 	{#if phase === 'board'}
-		<BigBoard
-			{boardValues}
-			{highlightIndex}
-			{round}
-			{players}
-			{currentPlayerIndex}
-			{lastResult}
-			{spinning}
-			{whammyFlash}
-			{showPassChooser}
-			{passCandidates}
-			onBeginSpin={beginSpin}
-			onStopSpin={stopSpin}
-			onInitiatePass={initiatePass}
-			onPassTo={passSpinsTo}
-			onCancelPassChooser={() => (showPassChooser = false)}
-		/>
-		<PlayerConsoles {players} {currentPlayerIndex} />
+		<div class="board-layout">
+			{#if isWideBoard}
+				<div class="console-slot left">
+					<PlayerConsoles {players} indices={leftIndices} {currentPlayerIndex} />
+				</div>
+			{/if}
+			<div class="board-slot">
+				<BigBoard
+					{boardValues}
+					{highlightIndex}
+					{round}
+					{players}
+					{currentPlayerIndex}
+					{lastResult}
+					{spinning}
+					{whammyFlash}
+					{showPassChooser}
+					{passCandidates}
+					onBeginSpin={beginSpin}
+					onStopSpin={stopSpin}
+					onInitiatePass={initiatePass}
+					onPassTo={passSpinsTo}
+					onCancelPassChooser={() => (showPassChooser = false)}
+				/>
+			</div>
+			{#if isWideBoard}
+				<div class="console-slot right">
+					<PlayerConsoles {players} indices={rightIndices} {currentPlayerIndex} />
+				</div>
+			{:else}
+				<div class="console-slot all">
+					<PlayerConsoles {players} indices={allIndices} {currentPlayerIndex} />
+				</div>
+			{/if}
+		</div>
 	{/if}
 
 	{#if phase === 'gameEnd'}
 		<GameEndScreen {players} {noChampion} onPlayAgain={playAgain} />
 	{/if}
 </div>
+
+<style>
+	.board-layout {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			'board'
+			'consoles';
+		gap: 1rem;
+		width: 100%;
+		max-width: 1400px;
+	}
+	.console-slot.all {
+		grid-area: consoles;
+	}
+	.console-slot.left {
+		grid-area: left;
+	}
+	.console-slot.right {
+		grid-area: right;
+	}
+	.console-slot {
+		display: flex;
+	}
+	.board-slot {
+		grid-area: board;
+		display: flex;
+		justify-content: center;
+	}
+
+	@media (min-width: 1100px) {
+		.board-layout {
+			grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(150px, 210px);
+			grid-template-areas: 'left board right';
+			align-items: stretch;
+		}
+	}
+</style>

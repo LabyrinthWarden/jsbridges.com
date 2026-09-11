@@ -8,8 +8,11 @@
 		onAddPlayer,
 		onRemovePlayer,
 		onResetQuestions,
-		onStart
+		onStart,
+		onStartTest
 	} = $props();
+
+	let testPlayerCount = $state(3);
 </script>
 
 <div class="panel setup-panel">
@@ -27,7 +30,7 @@
 			{/if}
 		</div>
 	{/each}
-	{#if playerNames.length < 3}
+	{#if playerNames.length < 6}
 		<button class="mini-btn" onclick={onAddPlayer}>+ Add player</button>
 	{/if}
 
@@ -42,6 +45,20 @@
 	</div>
 
 	<button class="start-btn" onclick={onStart}>START GAME</button>
+
+	<div class="test-mode">
+		<div class="mode-label">Test mode (board only)</div>
+		<div class="mode-hint">Random names, random starting spins, skips trivia entirely.</div>
+		<div class="test-row">
+			<label for="test-count">Players</label>
+			<select id="test-count" bind:value={testPlayerCount}>
+				{#each [2, 3, 4, 5, 6] as n}
+					<option value={n}>{n}</option>
+				{/each}
+			</select>
+			<button class="mini-btn" onclick={() => onStartTest(testPlayerCount)}>Start Test Game</button>
+		</div>
+	</div>
 
 	{#if highScores.length}
 		<div class="highscores">
@@ -87,6 +104,39 @@
 		font-family: 'IBM Plex Mono', monospace;
 		font-size: 0.75rem;
 		color: #6b6b7a;
+	}
+
+	.test-mode {
+		margin-top: 1.2rem;
+		border-top: 1px dashed #ff2e9a55;
+		padding-top: 1rem;
+	}
+	.mode-label {
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 0.8rem;
+		color: #ffd447;
+		margin-bottom: 0.3rem;
+	}
+	.test-row {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-top: 0.6rem;
+	}
+	.test-row label {
+		font-size: 0.85rem;
+		color: #c9cdd6;
+	}
+	.test-row select {
+		background: #0b0b14;
+		border: 2px solid #c9cdd655;
+		color: #fff;
+		border-radius: 6px;
+		padding: 0.4rem 0.6rem;
+		font-family: 'Space Grotesk', sans-serif;
+	}
+	.test-row .mini-btn {
+		margin-left: auto;
 	}
 
 	.highscores {

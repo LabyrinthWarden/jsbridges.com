@@ -2,7 +2,7 @@
 // Pure data & helpers. No Svelte runes here -- this is just a plain module so it
 // can be imported from +page.svelte and any child component without restriction.
 
-export const PLAYER_COLORS = ['#FFD447', '#00E5FF', '#FF2E9A'];
+export const PLAYER_COLORS = ['#FFD447', '#00E5FF', '#FF2E9A', '#7CFF6B', '#FF8A3D', '#B285FF'];
 
 export const TOTAL_ROUNDS = 2;
 export const ELIMINATION_WHAMMIES = 4;
@@ -106,3 +106,21 @@ export function gridArea(idx) {
 export function totalSpins(p) {
 	return p.earnedSpins + p.receivedSpins;
 }
+
+export function randomInt(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// More players earning trivia spins means more total spins in play, so the
+// question count scales up a bit to keep the board round from feeling thin.
+export function triviaQuestionCountForPlayers(playerCount) {
+	if (playerCount <= 2) return 3;
+	if (playerCount === 3) return 4;
+	if (playerCount === 4 || playerCount === 5) return 5;
+	return 6; // 6 players
+}
+
+export const TEST_NAME_POOL = [
+	'Blaze', 'Comet', 'Nova', 'Ranger', 'Echo', 'Ziggy',
+	'Turbo', 'Pixel', 'Sable', 'Quill', 'Vex', 'Otto'
+];
